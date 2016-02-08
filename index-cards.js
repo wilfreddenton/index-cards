@@ -90,12 +90,17 @@ BST.prototype.bfs = function() {
   }
   return list;
 }
-const text = fs.readFileSync('/Users/wilfred/Documents/School\ Senior\ Year/2055\ -\ Italian/Film\ Terms.md', 'utf-8');
+if (process.argv.length !== 3) {
+  console.log('You need to provide a file.');
+  process.exit(0);
+}
+const file = process.argv[2];
+const text = fs.readFileSync(file, 'utf-8');
 let trigger = true;
+const lines = text.split('\n').filter((line) => {
+  return line !== '';
+});
 while (trigger) {
-  const lines = text.split('\n').filter((line) => {
-    return line !== '';
-  });
   const nodes = lines.map((line) => {
     const match = /^\*\*(.*)\*\*:\s+(.*)$/g.exec(line);
     const term = match[1];
@@ -123,5 +128,11 @@ while (trigger) {
     } else {
       console.log('wrong!');
     }
+  }
+  let action = read.question('\nStudy again? (y/n): ').trim();
+  if (action === 'y' || action === 'Y') {
+    console.log('shuffling cards...');
+  } else {
+    trigger = false;
   }
 }
